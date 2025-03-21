@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EEG WebSocket Client</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #1e1e1e; color: #e0e0e0; }
+    h1 { color: #00e0ff; }
+    .band { margin-top: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Live EEG Data (Muse 2)</h1>
+  <div id="alpha" class="band">Alpha: loading...</div>
+  <div id="beta" class="band">Beta: loading...</div>
+  <div id="theta" class="band">Theta: loading...</div>
+  <script>
+    const alphaEl = document.getElementById("alpha");
+    const betaEl = document.getElementById("beta");
+    const thetaEl = document.getElementById("theta");
+    const ws = new WebSocket("ws://localhost:8765");
+    ws.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      alphaEl.textContent = "Alpha: " + data.alpha.map(v => v.toFixed(3)).join(", ");
+      betaEl.textContent  = "Beta: " + data.beta.map(v => v.toFixed(3)).join(", ");
+      thetaEl.textContent = "Theta: " + data.theta.map(v => v.toFixed(3)).join(", ");
+    };
+  </script>
+</body>
+</html>
